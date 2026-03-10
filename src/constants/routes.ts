@@ -1,0 +1,17 @@
+export const routes = {
+  home: "/",
+  startupRoaster: "/startup-roaster",
+  commitGenerator: "/commit-generator",
+  interviewChaos: "/interview-chaos",
+  developerPersonality: "/developer-personality",
+  codingExcuse: "/coding-excuse",
+  layoffCalculator: "/layoff-calculator",
+  buzzwordTranslator: "/buzzword-translator",
+  sideProjectValidator: "/side-project-validator",
+  rubberDuckDebugger: "/rubber-duck-debugger",
+  stackOverflowGenerator: "/stackoverflow-generator",
+  buzzwordBingo: "/buzzword-bingo",
+  cssInsultGenerator: "/css-insult-generator",
+  jobDescriptionChecker: "/job-description-checker",
+  atsScoreCheck: "/ats-score-check",
+} as const;
