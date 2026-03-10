@@ -25,16 +25,16 @@ export default function Home() {
   const featured = tools.find((tool) => tool.featured) ?? tools[0];
 
   return (
-    <div className="space-y-10">
-      <section className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950 p-6 sm:p-10">
+    <div className="space-y-8 sm:space-y-10">
+      <section className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950 p-5 sm:p-10">
         <div className="pointer-events-none absolute -right-20 top-4 h-56 w-56 rounded-full bg-cyan-400/20 blur-3xl" />
         <div className="pointer-events-none absolute bottom-0 left-0 h-32 w-32 rounded-full bg-emerald-400/20 blur-2xl" />
         <div className="relative max-w-3xl space-y-4">
-          <p className="inline-flex rounded-full border border-white/15 bg-white/[0.04] px-3 py-1 text-xs uppercase tracking-[0.18em] text-cyan-200">
+          <p className="inline-flex rounded-full border border-white/15 bg-white/[0.04] px-3 py-1 text-[11px] uppercase tracking-[0.16em] text-cyan-200 sm:text-xs sm:tracking-[0.18em]">
             Frontend Portfolio Centerpiece
           </p>
-          <h1 className="text-4xl font-semibold tracking-tight text-slate-50 sm:text-5xl">{appMeta.name}</h1>
-          <p className="text-lg text-slate-300">{appMeta.subtitle}</p>
+          <h1 className="text-3xl font-semibold tracking-tight text-slate-50 sm:text-5xl">{appMeta.name}</h1>
+          <p className="text-base text-slate-300 sm:text-lg">{appMeta.subtitle}</p>
           <p className="text-sm leading-relaxed text-slate-400">{appMeta.alt}</p>
           <div className="flex flex-wrap gap-3 pt-2">
             <a href="#tool-grid">
@@ -60,7 +60,7 @@ export default function Home() {
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Search by name, category, use case"
-            className="mt-3 w-full rounded-lg border border-white/15 bg-slate-900/70 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-cyan-300/50 focus:outline-none"
+            className="mt-3 min-h-11 w-full rounded-lg border border-white/15 bg-slate-900/70 px-3 py-2.5 text-base text-slate-100 placeholder:text-slate-500 focus:border-cyan-300/50 focus:outline-none sm:text-sm"
           />
           <div className="mt-3 flex flex-wrap gap-2">
             {categories.map((category) => (
@@ -68,7 +68,7 @@ export default function Home() {
                 key={category}
                 type="button"
                 onClick={() => setActiveCategory(category)}
-                className={`rounded-full px-3 py-1 text-xs transition ${
+                className={`min-h-10 rounded-full px-3 py-1.5 text-xs transition ${
                   activeCategory === category
                     ? "bg-cyan-300 text-slate-950"
                     : "border border-white/15 bg-white/[0.03] text-slate-300 hover:bg-white/[0.08]"
@@ -82,7 +82,7 @@ export default function Home() {
       </section>
 
       <section id="tool-grid" className="space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-2xl font-semibold text-slate-100">Tool Grid</h2>
           <p className="text-sm text-slate-400">{filtered.length} tools</p>
         </div>

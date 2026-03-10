@@ -28,21 +28,23 @@ export default function BuzzwordBingo() {
       <Card className="space-y-4">
         <h1 className="text-2xl font-semibold">Tech Buzzword Bingo</h1>
         <p className="text-sm text-slate-400">Click terms during meetings. Hit a row, column, or diagonal to call bingo.</p>
-        <div className="grid grid-cols-5 gap-2">
-          {board.map((cell) => (
-            <button
-              key={cell.id}
-              type="button"
-              onClick={() => toggle(cell.id)}
-              className={`min-h-20 rounded-lg border p-2 text-xs transition ${
-                cell.checked
-                  ? "border-emerald-300/60 bg-emerald-400/20 text-emerald-100"
-                  : "border-white/10 bg-white/[0.03] text-slate-300 hover:bg-white/[0.07]"
-              }`}
-            >
-              {cell.label}
-            </button>
-          ))}
+        <div className="-mx-1 overflow-x-auto px-1">
+          <div className="grid min-w-[20rem] grid-cols-5 gap-2">
+            {board.map((cell) => (
+              <button
+                key={cell.id}
+                type="button"
+                onClick={() => toggle(cell.id)}
+                className={`min-h-20 rounded-lg border p-1.5 text-[11px] leading-snug transition sm:p-2 sm:text-xs ${
+                  cell.checked
+                    ? "border-emerald-300/60 bg-emerald-400/20 text-emerald-100"
+                    : "border-white/10 bg-white/[0.03] text-slate-300 hover:bg-white/[0.07]"
+                }`}
+              >
+                {cell.label}
+              </button>
+            ))}
+          </div>
         </div>
         <div className="flex flex-wrap gap-3">
           <Button onClick={regenerate}>New Board</Button>
