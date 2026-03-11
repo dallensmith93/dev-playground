@@ -6,4 +6,5 @@ export const categories: readonly ("All" | ToolCategory)[] = [
   "Interactive",
   "Career Tools",
   "Startup Satire",
+  "Developer",
 ] as const;

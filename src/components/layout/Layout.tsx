@@ -2,6 +2,7 @@ import type { PropsWithChildren } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import PageContainer from "./PageContainer";
+import CommandPalette from "../command/CommandPalette";
 
 export default function Layout({ children }: PropsWithChildren) {
   return (
@@ -14,6 +15,7 @@ export default function Layout({ children }: PropsWithChildren) {
       <Navbar />
       <PageContainer>{children}</PageContainer>
       <Footer />
+      <CommandPalette />
     </div>
   );
 }

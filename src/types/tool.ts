@@ -1,4 +1,4 @@
-export type ToolCategory = "Humor" | "Interactive" | "Career Tools" | "Startup Satire";
+export type ToolCategory = "Humor" | "Interactive" | "Career Tools" | "Startup Satire" | "Developer";
 
 export type Tool = {
   name: string;

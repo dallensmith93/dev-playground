@@ -15,6 +15,18 @@ import BuzzwordBingo from "./pages/BuzzwordBingo";
 import CssInsultGenerator from "./pages/CssInsultGenerator";
 import JobDescriptionChecker from "./pages/JobDescriptionChecker";
 import AtsScoreCheck from "./pages/AtsScoreCheck";
+import GraphQLExplorer from "./pages/GraphQLExplorer";
+import GithubDevDashboard from "./pages/GithubDevDashboard";
+import ApiLatencyVisualizer from "./pages/ApiLatencyVisualizer";
+import PixelPerfectChecker from "./pages/PixelPerfectChecker";
+import MobileLayoutSimulator from "./pages/MobileLayoutSimulator";
+import TestingPlayground from "./pages/TestingPlayground";
+import RegexPlayground from "./pages/RegexPlayground";
+import JsonFormatter from "./pages/JsonFormatter";
+import ApiRequestBuilder from "./pages/ApiRequestBuilder";
+import JwtDecoder from "./pages/JwtDecoder";
+import CssLayoutGenerator from "./pages/CssLayoutGenerator";
+import ColorPaletteGenerator from "./pages/ColorPaletteGenerator";
 import { routes } from "./constants/routes";
 
 export default function App() {
@@ -36,6 +48,18 @@ export default function App() {
         <Route path={routes.cssInsultGenerator} element={<CssInsultGenerator />} />
         <Route path={routes.jobDescriptionChecker} element={<JobDescriptionChecker />} />
         <Route path={routes.atsScoreCheck} element={<AtsScoreCheck />} />
+        <Route path={routes.graphQLExplorer} element={<GraphQLExplorer />} />
+        <Route path={routes.githubDevDashboard} element={<GithubDevDashboard />} />
+        <Route path={routes.apiLatencyVisualizer} element={<ApiLatencyVisualizer />} />
+        <Route path={routes.pixelPerfectChecker} element={<PixelPerfectChecker />} />
+        <Route path={routes.mobileLayoutSimulator} element={<MobileLayoutSimulator />} />
+        <Route path={routes.testingPlayground} element={<TestingPlayground />} />
+        <Route path={routes.regexPlayground} element={<RegexPlayground />} />
+        <Route path={routes.jsonFormatter} element={<JsonFormatter />} />
+        <Route path={routes.apiRequestBuilder} element={<ApiRequestBuilder />} />
+        <Route path={routes.jwtDecoder} element={<JwtDecoder />} />
+        <Route path={routes.cssLayoutGenerator} element={<CssLayoutGenerator />} />
+        <Route path={routes.paletteGenerator} element={<ColorPaletteGenerator />} />
         <Route path="*" element={<Navigate to={routes.home} replace />} />
       </Routes>
     </Layout>
