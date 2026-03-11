@@ -3,16 +3,22 @@ import BackButton from "../components/shared/BackButton";
 import CopyButton from "../components/shared/CopyButton";
 import ResetButton from "../components/shared/ResetButton";
 import ResultCard from "../components/shared/ResultCard";
+import ToolHistory from "../components/history/ToolHistory";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import ProgressBar from "../components/ui/ProgressBar";
 import Textarea from "../components/ui/Textarea";
+import { useToolHistory } from "../hooks/useToolHistory";
 import { analyzeAts } from "../logic/atsScore";
+import { buildSharePath } from "../logic/shareEncoder";
+import type { HistoryEntry } from "../types/history";
 
 export default function AtsScoreCheck() {
   const [resumeText, setResumeText] = useState("");
   const [jobText, setJobText] = useState("");
   const [result, setResult] = useState<ReturnType<typeof analyzeAts> | null>(null);
+  const [shareCopied, setShareCopied] = useState(false);
+  const { addEntry } = useToolHistory("ats-score-check");
 
   const canAnalyze = resumeText.trim().length > 30;
 
@@ -27,6 +33,36 @@ export default function AtsScoreCheck() {
       `Suggestions: ${result.suggestions.join("; ")}`,
     ].join("\n");
   }, [result]);
+
+  const shareValue = useMemo(() => {
+    if (!result) return "";
+    const payload = [
+      `ATS Score: ${result.score}`,
+      `Keyword Coverage: ${result.keywordCoverage}%`,
+      `Strong Signals: ${result.strongSignals.join("; ")}`,
+      `Weak Signals: ${result.weakSignals.join("; ")}`,
+      `Missing Terms: ${result.missingTerms.join(", ")}`,
+      `Suggestions: ${result.suggestions.join("; ")}`,
+    ].join("\n");
+    return `${window.location.origin}${buildSharePath({ tool: "ats-score-check", result: payload })}`;
+  }, [result]);
+
+  const copyShareLink = async () => {
+    if (!shareValue) return;
+    await navigator.clipboard.writeText(shareValue);
+    setShareCopied(true);
+    window.setTimeout(() => setShareCopied(false), 1500);
+  };
+
+  const runAnalysis = () => {
+    const next = analyzeAts(resumeText, jobText);
+    setResult(next);
+    addEntry(resumeText, `Score ${next.score} | Coverage ${next.keywordCoverage}%`);
+  };
+
+  const restoreHistory = (entry: HistoryEntry) => {
+    setResumeText(entry.input);
+  };
 
   return (
     <div className="space-y-5">
@@ -56,7 +92,7 @@ export default function AtsScoreCheck() {
         </label>
 
         <div className="flex flex-wrap gap-3">
-          <Button onClick={() => setResult(analyzeAts(resumeText, jobText))} disabled={!canAnalyze}>
+          <Button onClick={runAnalysis} disabled={!canAnalyze}>
             Analyze ATS strength
           </Button>
           <ResetButton
@@ -67,6 +103,9 @@ export default function AtsScoreCheck() {
             }}
           />
           <CopyButton value={copyValue} />
+          <Button onClick={() => void copyShareLink()} variant="ghost" disabled={!result}>
+            {shareCopied ? "Copied" : "Copy Share Link"}
+          </Button>
         </div>
       </Card>
 
@@ -112,6 +151,7 @@ export default function AtsScoreCheck() {
           </div>
         </ResultCard>
       ) : null}
+      <ToolHistory tool="ats-score-check" onRestore={restoreHistory} />
     </div>
   );
 }

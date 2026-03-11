@@ -4,11 +4,15 @@ import CopyButton from "../components/shared/CopyButton";
 import EmptyState from "../components/shared/EmptyState";
 import ResetButton from "../components/shared/ResetButton";
 import ResultCard from "../components/shared/ResultCard";
+import ToolHistory from "../components/history/ToolHistory";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import Select from "../components/ui/Select";
 import Textarea from "../components/ui/Textarea";
+import { useToolHistory } from "../hooks/useToolHistory";
 import { jsonFormatter } from "../logic/jsonFormatter";
+import { buildSharePath } from "../logic/shareEncoder";
+import type { HistoryEntry } from "../types/history";
 
 export default function JsonFormatter() {
   const [input, setInput] = useState('{"name":"worker-ui","tools":["regex","json"]}');
@@ -17,6 +21,8 @@ export default function JsonFormatter() {
   const [formatted, setFormatted] = useState("");
   const [minified, setMinified] = useState("");
   const [error, setError] = useState("");
+  const [shareCopied, setShareCopied] = useState(false);
+  const { addEntry } = useToolHistory("json-formatter");
 
   const run = () => {
     const formatResult = jsonFormatter(input, "format", {
@@ -35,6 +41,7 @@ export default function JsonFormatter() {
     setFormatted(formatResult.output);
     setMinified(minifyResult.output);
     setError("");
+    addEntry(input, formatResult.output);
   };
 
   const reset = () => {
@@ -56,6 +63,30 @@ export default function JsonFormatter() {
       ].join("\n\n"),
     [error, formatted, input, minified],
   );
+
+  const shareValue = useMemo(() => {
+    if (!formatted && !minified) return "";
+    const payload = JSON.stringify(
+      {
+        formatted,
+        minified,
+      },
+      null,
+      2,
+    );
+    return `${window.location.origin}${buildSharePath({ tool: "json-formatter", result: payload })}`;
+  }, [formatted, minified]);
+
+  const copyShareLink = async () => {
+    if (!shareValue) return;
+    await navigator.clipboard.writeText(shareValue);
+    setShareCopied(true);
+    window.setTimeout(() => setShareCopied(false), 1500);
+  };
+
+  const restoreHistory = (entry: HistoryEntry) => {
+    setInput(entry.input);
+  };
 
   return (
     <div className="space-y-6">
@@ -92,6 +123,9 @@ export default function JsonFormatter() {
           <Button onClick={run}>Format JSON</Button>
           <ResetButton onClick={reset} />
           <CopyButton value={copyValue} />
+          <Button onClick={() => void copyShareLink()} variant="ghost" disabled={!formatted && !minified}>
+            {shareCopied ? "Copied" : "Copy Share Link"}
+          </Button>
         </div>
       </Card>
 
@@ -114,6 +148,7 @@ export default function JsonFormatter() {
       ) : (
         <EmptyState message="No formatted JSON yet." />
       )}
+      <ToolHistory tool="json-formatter" onRestore={restoreHistory} />
     </div>
   );
 }

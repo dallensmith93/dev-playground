@@ -26,4 +26,5 @@ export const routes = {
   jwtDecoder: "/jwt-decoder",
   cssLayoutGenerator: "/css-layout-generator",
   paletteGenerator: "/palette-generator",
+  shareToolResult: "/share/:tool/:data",
 } as const;

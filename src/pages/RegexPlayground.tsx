@@ -4,17 +4,23 @@ import CopyButton from "../components/shared/CopyButton";
 import EmptyState from "../components/shared/EmptyState";
 import ResetButton from "../components/shared/ResetButton";
 import ResultCard from "../components/shared/ResultCard";
+import ToolHistory from "../components/history/ToolHistory";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import Input from "../components/ui/Input";
 import ProgressBar from "../components/ui/ProgressBar";
 import Textarea from "../components/ui/Textarea";
+import { useToolHistory } from "../hooks/useToolHistory";
 import { useRegexTest } from "../hooks/useRegexTest";
+import { buildSharePath } from "../logic/shareEncoder";
+import type { HistoryEntry } from "../types/history";
 
 export default function RegexPlayground() {
   const [pattern, setPattern] = useState("\\b\\w{4}\\b");
   const [flags, setFlags] = useState("gi");
   const [source, setSource] = useState("Ship fast. Fix later. Test never.");
+  const [shareCopied, setShareCopied] = useState(false);
+  const { addEntry } = useToolHistory("regex-playground");
 
   const { result, isLoading, error, run, reset } = useRegexTest({
     autoRun: false,
@@ -25,7 +31,10 @@ export default function RegexPlayground() {
   });
 
   const runRegex = async () => {
-    await run({ pattern, flags, text: source, maxMatches: 500 });
+    const next = await run({ pattern, flags, text: source, maxMatches: 500 });
+    if (next) {
+      addEntry(`/${pattern}/${flags} :: ${source}`, `${next.matchCount} matches`);
+    }
   };
 
   const clearAll = () => {
@@ -51,6 +60,40 @@ export default function RegexPlayground() {
       ].join("\n\n"),
     [error, flags, pattern, result, source],
   );
+
+  const shareValue = useMemo(() => {
+    if (!result) return "";
+    const payload = JSON.stringify(
+      {
+        pattern: `/${pattern}/${flags}`,
+        text: source,
+        matchCount: result.matchCount,
+        matches: result.matches,
+      },
+      null,
+      2,
+    );
+    return `${window.location.origin}${buildSharePath({ tool: "regex-playground", result: payload })}`;
+  }, [flags, pattern, result, source]);
+
+  const copyShareLink = async () => {
+    if (!shareValue) return;
+    await navigator.clipboard.writeText(shareValue);
+    setShareCopied(true);
+    window.setTimeout(() => setShareCopied(false), 1500);
+  };
+
+  const restoreHistory = (entry: HistoryEntry) => {
+    const [left, restoredSource] = entry.input.split(" :: ");
+    const segments = left.match(/^\/(.*)\/([a-z]*)$/i);
+    if (segments) {
+      setPattern(segments[1] || "");
+      setFlags(segments[2] || "");
+    }
+    if (restoredSource) {
+      setSource(restoredSource);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -80,6 +123,9 @@ export default function RegexPlayground() {
           </Button>
           <ResetButton onClick={clearAll} />
           <CopyButton value={copyValue} />
+          <Button onClick={() => void copyShareLink()} variant="ghost" disabled={!result}>
+            {shareCopied ? "Copied" : "Copy Share Link"}
+          </Button>
         </div>
       </Card>
 
@@ -103,6 +149,7 @@ export default function RegexPlayground() {
       ) : (
         <EmptyState message="No regex run yet." />
       )}
+      <ToolHistory tool="regex-playground" onRestore={restoreHistory} />
     </div>
   );
 }

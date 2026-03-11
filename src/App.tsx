@@ -27,6 +27,7 @@ import ApiRequestBuilder from "./pages/ApiRequestBuilder";
 import JwtDecoder from "./pages/JwtDecoder";
 import CssLayoutGenerator from "./pages/CssLayoutGenerator";
 import ColorPaletteGenerator from "./pages/ColorPaletteGenerator";
+import ShareToolResult from "./pages/ShareToolResult";
 import { routes } from "./constants/routes";
 
 export default function App() {
@@ -60,6 +61,7 @@ export default function App() {
         <Route path={routes.jwtDecoder} element={<JwtDecoder />} />
         <Route path={routes.cssLayoutGenerator} element={<CssLayoutGenerator />} />
         <Route path={routes.paletteGenerator} element={<ColorPaletteGenerator />} />
+        <Route path={routes.shareToolResult} element={<ShareToolResult />} />
         <Route path="*" element={<Navigate to={routes.home} replace />} />
       </Routes>
     </Layout>
